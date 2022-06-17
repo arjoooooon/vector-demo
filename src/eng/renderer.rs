@@ -4,20 +4,18 @@ use std::string::String;
 use super::euler::{IDENTITY4X4};
 use super::euler::{Vec3, Vec4, Mat3, Mat4};
 
-#[derive(Clone, Copy, Debug)]
-pub struct Connection(u32, u32);
 
 #[derive(Clone, Debug)]
 pub struct GameObject {
     pub position: Vec3,
     pub orientation: Mat4, 
     pub points: Vec<Vec3>,
-    pub connections: Vec<Connection>,
+    pub connections: Vec<u32>,
     pos: Vec4,                           // This contains a 1 in the `w` position
 }
 
 impl GameObject {
-    pub fn new(position: Vec3, orientation: Mat4, points: Vec::<Vec3>, connections: Vec::<Connection>) -> GameObject {
+    pub fn new(position: Vec3, orientation: Mat4, points: Vec::<Vec3>, connections: Vec::<u32>) -> GameObject {
         return GameObject {
             position: position,
             orientation: orientation,
@@ -32,7 +30,7 @@ impl GameObject {
             position: Vec3{..Vec3::default()},
             orientation: IDENTITY4X4,
             points: Vec::<Vec3>::new(),
-            connections: Vec::<Connection>::new(),
+            connections: Vec::<u32>::new(),
             pos: Vec4{..Vec4::default()},
         };
     }
