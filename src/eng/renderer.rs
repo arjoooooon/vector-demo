@@ -4,7 +4,6 @@ use std::string::String;
 use super::euler::{IDENTITY4X4};
 use super::euler::{Vec3, Vec4, Mat3, Mat4};
 
-
 #[derive(Clone, Debug)]
 pub struct GameObject {
     pub position: Vec3,
@@ -116,8 +115,12 @@ impl Renderer {
         }
     }
 
-    pub fn render_frame(self, objects: &Vec::<GameObject>, camera: &Camera) -> Vec::<Line> {
-        let mut vectors_to_render: Vec::<Line> = Vec::<Line>::new(); 
+    pub fn update_aspect_ratio(& mut self, NEW_ASP: f64) {
+        self.ASP = NEW_ASP;
+    }
+
+    pub fn render_frame(self, objects: &Vec::<GameObject>, camera: &Camera) -> Vec::<f64> {
+        let mut vectors_to_render: Vec::<f64> = Vec::<f64>::new(); 
         
         for object in objects {
             let num_connections: usize = object.connections.len();
@@ -152,13 +155,13 @@ impl Renderer {
             }
             
             for idx in 0..num_connections {
-                let point1 = &projected_points[2*idx];
-                let point2 = &projected_points[2*idx+1];
+                let tail = &projected_points[2*idx];
+                let head = &projected_points[2*idx+1];
                 
-                vectors_to_render.push(Line{
-                    tail_x: point1[0], tail_y: point1[1],
-                    head_x: point2[0], head_y: point2[1]
-                });
+                vectors_to_render.push(tail[0]);
+                vectors_to_render.push(tail[1]);
+                vectors_to_render.push(head[0]);
+                vectors_to_render.push(head[1]);
             } 
         }
 
