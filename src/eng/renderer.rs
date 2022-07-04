@@ -9,12 +9,12 @@ pub struct GameObject {
     pub position: Vec3,
     pub orientation: Mat4, 
     pub points: Vec<Vec3>,
-    pub connections: Vec<u32>,
+    pub connections: Vec<usize>,
     pos: Vec4,                           // This contains a 1 in the `w` position
 }
 
 impl GameObject {
-    pub fn new(position: Vec3, orientation: Mat4, points: Vec::<Vec3>, connections: Vec::<u32>) -> GameObject {
+    pub fn new(position: Vec3, orientation: Mat4, points: Vec::<Vec3>, connections: Vec::<usize>) -> GameObject {
         return GameObject {
             position: position,
             orientation: orientation,
@@ -29,7 +29,7 @@ impl GameObject {
             position: Vec3{..Vec3::default()},
             orientation: IDENTITY4X4,
             points: Vec::<Vec3>::new(),
-            connections: Vec::<u32>::new(),
+            connections: Vec::<usize>::new(),
             pos: Vec4{..Vec4::default()},
         };
     }
@@ -55,7 +55,7 @@ impl Camera {
     }
     pub fn default() -> Camera {
         return Camera {
-            position: Vec3{..Vec3::default()},
+            position: Vec3{elems: [0.0, 0.0, -100.0]},
             orientation: IDENTITY4X4,
             pos: Vec4{..Vec4::default()},
         }
@@ -119,7 +119,7 @@ impl Renderer {
         self.ASP = NEW_ASP;
     }
 
-    pub fn render_frame(self, objects: &Vec::<GameObject>, camera: &Camera) -> Vec::<f64> {
+    pub fn render_frame(& mut self, objects: &Vec::<GameObject>, camera: &Camera) -> Vec::<f64> {
         let mut vectors_to_render: Vec::<f64> = Vec::<f64>::new(); 
         
         for object in objects {
@@ -148,15 +148,20 @@ impl Renderer {
                 current_point = world_to_camera_matrix * current_point;
 
                 // Transform to projection space
+                
                 current_point = self.PROJECTION_MATRIX * current_point;
                 current_point = current_point / current_point[3];
 
                 projected_points.push(current_point);
             }
-            
-            for idx in 0..num_connections {
-                let tail = &projected_points[2*idx];
-                let head = &projected_points[2*idx+1];
+           
+            for idx in 0..num_connections/2 {
+                let idx1: usize = object.connections[2*idx];
+                let idx2: usize = object.connections[2*idx + 1];
+
+
+                let tail = &projected_points[idx1];
+                let head = &projected_points[idx2];
                 
                 vectors_to_render.push(tail[0]);
                 vectors_to_render.push(tail[1]);

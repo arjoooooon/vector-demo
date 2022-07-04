@@ -6,6 +6,16 @@ extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
 use eng::euler::{Vec3, Vec4, Mat3, Mat4};
 
+
+extern crate web_sys;
+
+// A macro to provide `println!(..)`-style syntax for `console.log` logging.
+macro_rules! log {
+    ( $( $t:tt )* ) => {
+        web_sys::console::log_1(&format!( $( $t )* ).into());
+    }
+}
+
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
 
@@ -36,6 +46,9 @@ impl GlobalWrapper {
         let mut renderer = eng::renderer::Renderer::default();
         renderer.update_aspect_ratio(1.158);
 
+        let camera  = eng::renderer::Camera::default();let mut renderer = eng::renderer::Renderer::default();
+        renderer.update_aspect_ratio(1.158);
+
         let camera  = eng::renderer::Camera::default();
 
         return GlobalWrapper {
@@ -62,7 +75,7 @@ impl GlobalWrapper {
         let vec7 = Vec3::new(50.0, 50.0, 50.0);
 
         let vec_points: Vec<Vec3> = vec![vec0, vec1, vec2, vec3, vec4, vec5, vec6, vec7];
-        let vec_connections: Vec<u32> = vec![0, 1, 1, 3, 3, 2, 2, 0, 4, 5, 5, 7, 7, 6, 6, 4, 0, 4, 1, 5, 2, 6, 3, 7];
+        let vec_connections: Vec<usize> = vec![0, 1, 1, 3, 3, 2, 2, 0, 4, 5, 5, 7, 7, 6, 6, 4, 0, 4, 1, 5, 2, 6, 3, 7];
         
         let cube = eng::renderer::GameObject::new(Vec3::default(), eng::euler::IDENTITY4X4,
                                                 vec_points, vec_connections);
