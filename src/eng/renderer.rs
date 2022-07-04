@@ -55,7 +55,7 @@ impl Camera {
     }
     pub fn default() -> Camera {
         return Camera {
-            position: Vec3{elems: [0.0, 0.0, -100.0]},
+            position: Vec3{elems: [0.0, 0.0, -200.0]},
             orientation: IDENTITY4X4,
             pos: Vec4{..Vec4::default()},
         }
@@ -115,8 +115,14 @@ impl Renderer {
         }
     }
 
-    pub fn update_aspect_ratio(& mut self, NEW_ASP: f64) {
+    pub fn update_aspect_ratio(&mut self, NEW_ASP: f64) {
         self.ASP = NEW_ASP;
+        self.PROJECTION_MATRIX = Mat4{elems: [
+            NEW_ASP * 1.0/(PI/4.0).tan(), 0.0, 0.0, 0.0,
+            0.0, 1.0/(PI/4.0).tan(), 0.0, 0.0,
+            0.0, 0.0, 1000.0/(1000.0-1.0), -(1.0*1000.0)/(1000.0-1.0),
+            0.0, 0.0, 1.0, 0.0
+        ]} 
     }
 
     pub fn render_frame(& mut self, objects: &Vec::<GameObject>, camera: &Camera) -> Vec::<f64> {
