@@ -34,14 +34,22 @@ pub struct GlobalWrapper {
 
 #[wasm_bindgen]
 impl GlobalWrapper {
-    pub fn new(object: u32) -> GlobalWrapper { 
+    pub fn new(object_name: String, x_r: f64, y_r: f64, z_r: f64) -> GlobalWrapper { 
         let renderer = eng::renderer::Renderer::default();
         let camera  = eng::renderer::Camera::default();
 
         let mut shape: eng::renderer::GameObject = eng::renderer::GameObject::default();
-        if object == 1 {
+        if object_name == "cube" {
             shape = eng::renderer::make_cube(50.0);
-            shape.angular_velocity = eng::euler::y_rotation_matrix(0.1);
+            shape.angular_velocity = eng::euler::x_rotation_matrix(x_r) * shape.angular_velocity;
+            shape.angular_velocity = eng::euler::y_rotation_matrix(y_r) * shape.angular_velocity;
+            shape.angular_velocity = eng::euler::z_rotation_matrix(z_r) * shape.angular_velocity;
+        }
+        else if object_name == "tesseract" {
+            shape = eng::renderer::make_tesseract(60.0);
+            shape.angular_velocity = eng::euler::x_rotation_matrix(x_r) * shape.angular_velocity;
+            shape.angular_velocity = eng::euler::y_rotation_matrix(y_r) * shape.angular_velocity;
+            shape.angular_velocity = eng::euler::z_rotation_matrix(z_r) * shape.angular_velocity;
         }
 
         return GlobalWrapper {
