@@ -499,8 +499,8 @@ pub fn x_rotation_matrix(theta: f64) -> Mat4 {
 pub fn y_rotation_matrix(theta: f64) -> Mat4 {
     return Mat4{elems: [
          theta.cos(),   0.0, theta.sin(), 0.0,
-         0.0,           0.0, 0.0,         0.0,
-        -(theta.sin()), 0.0, theta.cos(), 0.0,
+         0.0,           1.0, 0.0,         0.0,
+        -theta.sin(), 0.0, theta.cos(), 0.0,
          0.0,           0.0, 0.0,         1.0
     ]};
 }

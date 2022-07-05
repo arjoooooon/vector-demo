@@ -7,17 +7,45 @@ use super::euler::{Vec3, Vec4, Mat3, Mat4};
 #[derive(Clone, Debug)]
 pub struct GameObject {
     pub position: Vec3,
+    pub velocity: Vec3,
     pub orientation: Mat4, 
+    pub angular_velocity: Mat4,
     pub points: Vec<Vec3>,
     pub connections: Vec<usize>,
     pos: Vec4,                           // This contains a 1 in the `w` position
 }
 
+pub fn make_cube(side_length: f64) -> GameObject {
+    let hf: f64 = side_length / 2.0;
+    
+    let vec0 = Vec3::new(-hf, -hf, -hf);
+    let vec1 = Vec3::new(hf, -hf, -hf);
+    let vec2 = Vec3::new(-hf, hf, -hf);
+    let vec3 = Vec3::new(hf, hf, -hf);
+    let vec4 = Vec3::new(-hf, -hf, hf);
+    let vec5 = Vec3::new(hf, -hf, hf);
+    let vec6 = Vec3::new(-hf, hf, hf);
+    let vec7 = Vec3::new(hf, hf, hf);
+ 
+    let vec_points: Vec<Vec3> = vec![vec0, vec1, vec2, vec3, vec4, vec5, vec6, vec7];
+    let vec_connections: Vec<usize> = vec![0, 1, 1, 3, 3, 2, 2, 0, 4, 5, 5, 7, 7, 6, 6, 4, 0, 4, 1, 5, 2, 6, 3, 7];
+
+    return GameObject::new(
+        Vec3::new(0.0, 0.0, 0.0),
+        Vec3::new(0.0, 0.0, 0.0),
+        IDENTITY4X4,
+        IDENTITY4X4,
+        vec_points,
+        vec_connections);
+}
+
 impl GameObject {
-    pub fn new(position: Vec3, orientation: Mat4, points: Vec::<Vec3>, connections: Vec::<usize>) -> GameObject {
+    pub fn new(position: Vec3, velocity: Vec3, orientation: Mat4, angular_velocity: Mat4, points: Vec::<Vec3>, connections: Vec::<usize>) -> GameObject {
         return GameObject {
             position: position,
+            velocity: velocity,
             orientation: orientation,
+            angular_velocity: angular_velocity,
             points: points,
             connections: connections,
             pos: Vec4{elems: [position[0], position[1], position[2], 1.0]}
@@ -27,11 +55,18 @@ impl GameObject {
     pub fn default() -> GameObject {
         return GameObject {
             position: Vec3{..Vec3::default()},
+            velocity: Vec3{..Vec3::default()},
             orientation: IDENTITY4X4,
+            angular_velocity: IDENTITY4X4,
             points: Vec::<Vec3>::new(),
             connections: Vec::<usize>::new(),
             pos: Vec4{..Vec4::default()},
         };
+    }
+
+    pub fn tick(&mut self) {
+        self.position = self.position + self.velocity;
+        self.orientation = self.angular_velocity * self.orientation;
     }
 
     pub fn from_file(filename: String) -> GameObject {
