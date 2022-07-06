@@ -78,6 +78,26 @@ pub fn make_tesseract(side_length: f64) -> GameObject {
         vec_connections);
 }
 
+pub fn make_skeleton1(len: f64) -> GameObject {
+    let vec0 = Vec3::new(-2.0*len, -len, -len);
+    let vec1 = Vec3::new(-len, len, len);
+    let vec2 = Vec3::new(0.0, 0.0, 0.0);
+    let vec3 = Vec3::new(len, len, -len);
+    let vec4 = Vec3::new(2.0*len, -len, len);
+
+    let vec_points: Vec<Vec3> = vec![vec0, vec1, vec2, vec3, vec4];
+    let vec_connections: Vec<usize> = vec![0, 1, 0, 2, 0, 3, 0, 4, 1, 2, 1, 3, 1, 4, 2, 3, 2, 4, 3, 4];
+
+    return GameObject::new(
+        Vec3::new(0.0, 0.0, 0.0),
+        Vec3::new(0.0, 0.0, 0.0),
+        IDENTITY4X4,
+        IDENTITY4X4,
+        vec_points,
+        vec_connections
+    );
+}
+
 impl GameObject {
     pub fn new(position: Vec3, velocity: Vec3, orientation: Mat4, angular_velocity: Mat4, points: Vec::<Vec3>, connections: Vec::<usize>) -> GameObject {
         return GameObject {
