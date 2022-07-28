@@ -18,25 +18,38 @@ pub struct GameObject {
 pub fn make_cube(side_length: f64) -> GameObject {
     let hf: f64 = side_length / 2.0;
     
-    let vec0 = Vec3::new(-hf, -hf, -hf);
-    let vec1 = Vec3::new(hf, -hf, -hf);
-    let vec2 = Vec3::new(-hf, hf, -hf);
-    let vec3 = Vec3::new(hf, hf, -hf);
-    let vec4 = Vec3::new(-hf, -hf, hf);
-    let vec5 = Vec3::new(hf, -hf, hf);
-    let vec6 = Vec3::new(-hf, hf, hf);
-    let vec7 = Vec3::new(hf, hf, hf);
- 
-    let vec_points: Vec<Vec3> = vec![vec0, vec1, vec2, vec3, vec4, vec5, vec6, vec7];
-    let vec_connections: Vec<usize> = vec![0, 1, 1, 3, 3, 2, 2, 0, 4, 5, 5, 7, 7, 6, 6, 4, 0, 4, 1, 5, 2, 6, 3, 7];
+    let points: Vec<Vec3> = vec![
+        Vec3::new(-hf, -hf, -hf),
+        Vec3::new(hf, -hf, -hf),
+        Vec3::new(-hf, hf, -hf),
+        Vec3::new(hf, hf, -hf),
+        Vec3::new(-hf, -hf, hf),
+        Vec3::new(hf, -hf, hf),
+        Vec3::new(-hf, hf, hf),
+        Vec3::new(hf, hf, hf)
+    ];
+    
+    let connections: Vec<usize> = vec![
+        0, 1, 
+        1, 3, 
+        3, 2, 
+        2, 0, 
+        4, 5, 
+        5, 7, 
+        7, 6, 
+        6, 4, 
+        0, 4, 
+        1, 5, 
+        2, 6, 
+        3, 7];
 
     return GameObject::new(
         Vec3::new(0.0, 0.0, 0.0),
         Vec3::new(0.0, 0.0, 0.0),
         IDENTITY4X4,
         IDENTITY4X4,
-        vec_points,
-        vec_connections);
+        points,
+        connections);
 }
 
 pub fn make_tesseract(side_length: f64) -> GameObject {
